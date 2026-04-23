@@ -140,8 +140,15 @@ final class ImageProxyExtension extends Minz_Extension {
 				continue;
 			}
 			if ($img->hasAttribute('src')) {
-				$src = $img->getAttribute('src');
-				$newSrc = self::getProxyImageUri($src);
+    			$src = $img->getAttribute('src');
+				
+    			// 只有链接包含 sspai.com 时才调用代理逻辑
+    			if (strpos($src, 'sspai.com') !== false) {
+       				$newSrc = self::getProxyImageUri($src);
+        			$img->setAttribute('data-xextension-imageproxy-original-src', $src);
+        			$img->setAttribute('src', $newSrc);
+    			}
+			}
 				/*
 				Due to the URL change, FreshRSS is not aware of already rendered enclosures.
 				Adding data-xextension-imageproxy-original-src / srcset ensures that
